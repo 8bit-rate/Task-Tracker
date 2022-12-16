@@ -1,0 +1,77 @@
+﻿@model IEnumerable<ToDoList>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">My tasks</h2>
+        </div>
+        <div class="col-6 text-end">
+           <a asp-controller="ToDoList" asp-action="Create" class="btn btn-outline-secondary"><i class="bi bi-plus-square"></i> &nbsp; New Task!</a>
+        </div>
+    </div>
+</div>
+</br>
+<!-- <table class = "table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">
+                Task
+            </th>
+            <th scope="col">
+                Description
+            </th>
+            <th scope="col">
+                Status
+            </th>
+            <th scope="col">
+                Created Date Time
+            </th>
+            <th scope="col">
+                Date Start
+            </th>
+            <th scope="col">
+                DeadLine
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+       /* @foreach(var task in Model)
+        {
+                <tr class="table-primary">
+                <td width="15%">
+                    @task.Content
+                </td>
+                <td width="25%">
+                    @task.Description
+                </td>
+                <td width="15%">
+                    @task.Status
+                </td>
+                <td width="15%">
+                    @task.CreatedDateTime
+                </td>
+                <td width="15%">
+                    @task.DateStart
+                </td>
+                <td width="15%">
+                    @task.DeadLine
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>-->
+    @foreach(var task in Model) {
+                <div class="card border-primary mb-3" style="max-width: 20rem; ">
+          <div class="card-header">Task dated @task.CreatedDateTime</div>
+      <div class="card-body">
+        <h4 class="card-title">@task.Content</h4>
+            <p class="card-text">Description: @task.Description</p>
+            <p class="card-text">Status: @task.Status</p>
+            <p class="card-text">Start: @task.DateStart</p>
+            <p class="card-text">Deadline: @task.DeadLine</p>
+      </div>
+    </div>
+    }
