@@ -16,5 +16,23 @@ namespace ToDo_List.Controllers
             IEnumerable<ToDoList> objCategoryList = _db.ToDoLists;
             return View(objCategoryList);
         }
+
+        //GET
+        public IActionResult Create()
+        {
+            return View();
+        }
+        //POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(ToDoList obj)
+        {
+            if(ModelState.IsValid)
+            {
+                _db.ToDoLists.Add(obj);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

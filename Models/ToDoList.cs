@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace ToDo_List.Models
 {
@@ -7,13 +8,16 @@ namespace ToDo_List.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        [DisplayName("Task")]
         public string Content{ get; set; }
         public string Description { get; set; }
         public TaskStatus Status { get; set; } = TaskStatus.Created;
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         [Required]
+        [DisplayName("Date start")]
         public DateTime DateStart { get; set; }
         [Required]
-        public DateTime DeadLine { get; set; }
+        [DisplayName("Deadline")]
+        public DateTime Deadline { get; set; }
     }
 }

@@ -1,0 +1,28 @@
+﻿@model ToDoList
+
+<form method="post">
+	<div class="border p-3 mt-4">
+		<div class="row pb-2">
+			<h2 class="text-primary">Create a new task</h2>
+			<hr />
+		</div>
+		<div class="mb-3">
+			<label asp-for="Content"></label>
+			<input asp-for="Content" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label asp-for="Description"></label>
+			<input asp-for="Description" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label asp-for="DateStart"></label>
+			<input asp-for="DateStart" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label asp-for="Deadline"></label>
+			<input asp-for="Deadline" class="form-control" />
+		</div>
+		<button type="submit" class="btn btn-primary" style="150px">Create!</button>
+		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="150px">Back to list</a>
+	</div>
+</form>
