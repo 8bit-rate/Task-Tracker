@@ -35,6 +35,7 @@ namespace ToDo_List.Controllers
 			{
 				_db.ToDoLists.Add(obj);
 				_db.SaveChanges();
+				TempData["success"] = "Create successfuly";
 				return RedirectToAction("Index");
 			}
 			return View(obj);
@@ -68,6 +69,7 @@ namespace ToDo_List.Controllers
 			{
 				_db.ToDoLists.Update(obj);
 				_db.SaveChanges();
+				TempData["success"] = "Update successfuly";
 				return RedirectToAction("Index");
 			}
 			return View(obj);
@@ -98,6 +100,7 @@ namespace ToDo_List.Controllers
 			}
 			_db.ToDoLists.Remove(taskFromDb);
 			_db.SaveChanges();
+			TempData["success"] = "Removed successfuly";
 			return RedirectToAction("Index");
 		}
 	}

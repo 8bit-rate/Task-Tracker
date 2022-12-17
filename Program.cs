@@ -35,7 +35,7 @@ namespace ToDo_List
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=ToDoList}/{action=Index}/{id?}");
 
             app.Run();
         }
