@@ -27,12 +27,17 @@ namespace ToDo_List.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ToDoList obj)
         {
+            if(obj.DateStart >= obj.Deadline)
+            {
+                ModelState.AddModelError("deadline", "Deadline can not be before or equal date start");
+            }
             if(ModelState.IsValid)
             {
                 _db.ToDoLists.Add(obj);
                 _db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            return View(obj);
         }
     }
 }

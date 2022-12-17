@@ -11,6 +11,7 @@ namespace ToDo_List.Models
         [DisplayName("Task")]
         public string Content{ get; set; }
         public string Description { get; set; }
+        [Range(0, 2)]
         public TaskStatus Status { get; set; } = TaskStatus.Created;
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         [Required]
