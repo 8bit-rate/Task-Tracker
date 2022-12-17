@@ -1,0 +1,41 @@
+﻿@model ToDoList
+
+<form method="post" asp-action="DeletePOST">
+	<input asp-for="Id" hidden />
+	<div class="border p-3 mt-4">
+		<div class="row pb-2">
+			<h2 class="text-primary">Delete task</h2>
+			<hr />
+		</div>
+		<div asp-validation-summary="All"></div>
+		<div class="mb-3">
+			<label asp-for="Content"></label>
+			<input asp-for="Content" class="form-control" disabled/>
+			<span asp-validation-for="Content" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="Description"></label>
+			<input asp-for="Description" class="form-control" disabled/>
+		</div>
+		<div class="mb-3">
+			<label asp-for="Status"></label>
+			<input asp-for="Status" class="form-control" disabled/>
+		</div>
+		<div class="mb-3">
+			<label asp-for="DateStart"></label>
+			<input asp-for="DateStart" class="form-control" disabled/>
+		</div>
+		<div class="mb-3">
+			<label asp-for="Deadline"></label>
+			<input asp-for="Deadline" class="form-control" disabled/>
+		</div>
+		<button type="submit" class="btn btn-danger" style="150px">Remove</button>
+		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="150px">Back to list</a>
+	</div>
+</form>
+
+@section Scripts {
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}
