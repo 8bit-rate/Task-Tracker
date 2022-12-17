@@ -67,7 +67,7 @@ namespace ToDo_List.Controllers
 			}
 			if (ModelState.IsValid)
 			{
-				_db.ToDoLists.Add(obj);
+				_db.ToDoLists.Update(obj);
 				_db.SaveChanges();
 				return RedirectToAction("Index");
 			}
