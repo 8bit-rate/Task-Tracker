@@ -16,7 +16,7 @@ namespace ToDo_List.Controllers
             IEnumerable<ToDoList> objCategoryList = _db.ToDoLists;
             return View(objCategoryList);
         }
-
+                                                                                    // Create actions
         //GET
         public IActionResult Create()
         {
@@ -39,5 +39,39 @@ namespace ToDo_List.Controllers
             }
             return View(obj);
         }
-    }
+
+		                                                                // Edit acions
+
+		public IActionResult Edit(int? id)
+		{
+            if(id == null || id == 0)
+            {
+                return NotFound();  
+            }
+
+            var taskFromDb = _db.ToDoLists.Find(id);
+            if (taskFromDb == null)
+            {
+                return NotFound();
+            }
+			return View(taskFromDb);
+		}
+		//POST
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(ToDoList obj)
+		{
+			if (obj.DateStart >= obj.Deadline)
+			{
+				ModelState.AddModelError("deadline", "Deadline can not be before or equal date start");
+			}
+			if (ModelState.IsValid)
+			{
+				_db.ToDoLists.Add(obj);
+				_db.SaveChanges();
+				return RedirectToAction("Index");
+			}
+			return View(obj);
+		}
+	}
 }

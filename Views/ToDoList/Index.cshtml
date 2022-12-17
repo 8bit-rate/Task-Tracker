@@ -64,7 +64,7 @@
     </tbody>
 </table>-->
     @foreach(var task in Model) {
-                <div class="card border-primary mb-3" style="max-width: 20rem; ">
+    <div class="card border-primary mb-3" style="max-width: 20rem; ">
           <div class="card-header">Task dated @task.CreatedDateTime</div>
       <div class="card-body">
         <h4 class="card-title">@task.Content</h4>
@@ -72,6 +72,9 @@
             <p class="card-text">Status: @task.Status</p>
             <p class="card-text">Start: @task.DateStart</p>
             <p class="card-text">Deadline: @task.Deadline</p>
+            <div class="w-75 btn-group" role="group">
+                    <a asp-controller="ToDoList" asp-action="Edit" asp-route-id="@task.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+            </div>
       </div>
     </div>
     }
