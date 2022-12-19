@@ -13,9 +13,12 @@
 			<span asp-validation-for="Content" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
-			<label asp-for="Importance"></label>
-			<input asp-for="Importance" class="form-control" />
-			<span asp-validation-for="Importance" class="text-danger"></span>
+		  <label asp-for="Importance"></label>
+		  <select class="form-control" id="exampleSelect1" asp-for="Importance">
+			<option>@ToDo_List.Models.Importance.Low</option>
+			<option>@ToDo_List.Models.Importance.Medium</option>
+			<option>@ToDo_List.Models.Importance.High</option>
+		  </select>
 		</div>
 		<div class="mb-3">
 			<label asp-for="Description"></label>
@@ -36,8 +39,8 @@
 			<input asp-for="Deadline" class="form-control" />
 			<span asp-validation-for="Deadline" class="text-danger"></span>
 		</div>
-		<button type="submit" class="btn btn-primary" style="150px">Create!</button>
-		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="150px">Back to list</a>
+		<button type="submit" class="btn btn-primary" style="width: 150px">Create!</button>
+		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="width: 150px">Back to list</a>
 	</div>
 </form>
 
