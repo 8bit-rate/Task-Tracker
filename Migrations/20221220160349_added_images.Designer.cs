@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDo_List.Data;
 
@@ -11,9 +12,10 @@ using ToDo_List.Data;
 namespace ToDo_List.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221220160349_added_images")]
+    partial class added_images
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +37,7 @@ namespace ToDo_List.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("ToDo_List.Models.ToDoList", b =>
@@ -78,7 +80,7 @@ namespace ToDo_List.Migrations
 
                     b.HasIndex("ImageModelId");
 
-                    b.ToTable("ToDoLists", (string)null);
+                    b.ToTable("ToDoLists");
                 });
 
             modelBuilder.Entity("ToDo_List.Models.ToDoList", b =>

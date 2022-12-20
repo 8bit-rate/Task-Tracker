@@ -9,5 +9,6 @@ namespace ToDo_List.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<ToDoList> ToDoLists { get; set; }
+        public DbSet<ImageModel> Images { get; set; }
     }
 }

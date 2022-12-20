@@ -11,6 +11,7 @@ namespace ToDo_List.Models
         [DisplayName("Task")]
         public string Content{ get; set; }
         public string? Description { get; set; }
+        public ImageModel? ImageModel { get; set; }
         public string? Note { get; set; }
         
         public TaskStatus Status { get; set; } = TaskStatus.Created;
