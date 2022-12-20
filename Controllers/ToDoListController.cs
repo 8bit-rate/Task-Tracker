@@ -17,7 +17,7 @@ namespace ToDo_List.Controllers
 		}
 		public IActionResult Index()
 		{
-			IEnumerable<ToDoList> objCategoryList = _db.ToDoLists;
+			IEnumerable<ToDoList> objCategoryList = _db.ToDoLists.Include(o => o.ImageModel);
 			return View(objCategoryList);
 		}
 		// Create actions

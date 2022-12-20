@@ -21,7 +21,7 @@
 	<div class="col-4">
 		@foreach (var task in createdTasks)
 		{
-		<div class="card border-primary mb-3" style="max-width: 30rem; min-height: 27rem">
+		<div class="card border-primary mb-3" style="max-width: 30rem; min-height: auto">
 		  <div class="card-header">Task dated @task.CreatedDateTime</div>
 		  <div class="card-body">
 			<h4 class="card-title">@task.Content</h4>
@@ -31,7 +31,13 @@
 			<p class="card-text">Status: @task.Status</p>
 			<p class="card-text">Start: @task.DateStart</p>
 			<p class="card-text">Deadline: @task.Deadline</p>
-			<div class="w-75 btn-group position-absolute" role="group" style="bottom: 10px">
+			@if (task.ImageModel != null)
+			{
+				<p class="card-text">
+				<img class="card-img" src="@($"/Tasks/Task{task.Id}/{task.ImageModel.ImageTitle}")" alt="Task image capture">
+				</p>
+			}
+			<div class="w-75 btn-group" role="group">
 			  <a asp-controller="ToDoList" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-outline-info">
 				<i class="bi bi-pencil-square"></i> Edit </a> &nbsp &nbsp;
 			  <a asp-controller="ToDoList" asp-action="Delete" asp-route-id="@task.Id" class="btn btn-outline-danger">
@@ -54,7 +60,13 @@
 			<p class="card-text">Status: @task.Status</p>
 			<p class="card-text">Start: @task.DateStart</p>
 			<p class="card-text">Deadline: @task.Deadline</p>
-			<div class="w-75 btn-group position-absolute" role="group" style="bottom: 10px">
+			@if (task.ImageModel != null)
+			{
+				<p class="card-text">
+				<img class="card-img" src="@($"/Tasks/Task{task.Id}/{task.ImageModel.ImageTitle}")" alt="Task image capture">
+				</p>
+			}
+			<div class="w-75 btn-group" role="group">
 			  <a asp-controller="ToDoList" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-outline-info">
 				<i class="bi bi-pencil-square"></i> Edit </a> &nbsp &nbsp;
 			  <a asp-controller="ToDoList" asp-action="Delete" asp-route-id="@task.Id" class="btn btn-outline-danger">
@@ -77,10 +89,16 @@
 			<p class="card-text">Status: @task.Status</p>
 			<p class="card-text">Start: @task.DateStart</p>
 			<p class="card-text">Deadline: @task.Deadline</p>
-			<div class="w-75 btn-group position-absolute" role="group" style="bottom: 10px">
-			  <a asp-controller="ToDoList" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-outline-info">
+			@if (task.ImageModel != null)
+			{
+				<p class="card-text">
+				<img class="card-img" src="@($"/Tasks/Task{task.Id}/{task.ImageModel.ImageTitle}")" alt="Task image capture">
+				</p>
+			}
+			<div class="w-75 btn-group" role="group">
+			 <a asp-controller="ToDoList" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-outline-info">
 				<i class="bi bi-pencil-square"></i> Edit </a> &nbsp &nbsp;
-			  <a asp-controller="ToDoList" asp-action="Delete" asp-route-id="@task.Id" class="btn btn-outline-danger">
+			<a asp-controller="ToDoList" asp-action="Delete" asp-route-id="@task.Id" class="btn btn-outline-danger">
 				<i class="bi bi-trash"></i> Delete</a>
 			</div>
 		  </div>
