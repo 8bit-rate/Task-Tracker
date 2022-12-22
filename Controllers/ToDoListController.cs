@@ -17,8 +17,8 @@ namespace ToDo_List.Controllers
 		}
 		public IActionResult Index()
 		{
-			IEnumerable<ToDoList> objCategoryList = _db.ToDoLists.Include(o => o.ImageModel);
-			return View(objCategoryList);
+			IEnumerable<ToDoList> tasksList = _db.ToDoLists.Include(o => o.ImageModel);
+			return View(tasksList);
 		}
 		// Create actions
 		//GET
@@ -74,7 +74,6 @@ namespace ToDo_List.Controllers
 		}
 
 		// Edit acions
-
 		public IActionResult Edit(int? id)
 		{
 			if (id == null || id == 0)
@@ -86,6 +85,7 @@ namespace ToDo_List.Controllers
 			{
 				return NotFound();
 			}
+
 			return View(taskFromDb);
 		}
 		//POST
@@ -162,11 +162,15 @@ namespace ToDo_List.Controllers
 			}
 
 			_db.ToDoLists.Remove(taskFromDb);
-			//_db.Images.Remove(taskFromDb.ImageModel);
 
 			_db.SaveChanges();
 			TempData["success"] = "Removed successfuly";
 			return RedirectToAction("Index");
+		}
+		public IEnumerable<int> GetAllTasks()
+		{
+			var tasks = from b in _db.ToDoLists select b.Id;
+			return tasks;
 		}
 	}
 }

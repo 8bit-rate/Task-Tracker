@@ -24,5 +24,7 @@ namespace ToDo_List.Models
         [Required]
         [DisplayName("Deadline")]
         public DateTime Deadline { get; set; }
+        [DisplayName("Related task id")]
+        public int? relatedTaskId { get; set; } = null;
     }
 }
