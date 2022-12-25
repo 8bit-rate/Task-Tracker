@@ -32,9 +32,9 @@
 		<div class="mb-3">
 		  <label asp-for="Status"></label>
 		  <select class="form-control" id="exampleSelect1" asp-for="Status">
-			<option>@ToDo_List.Models.TaskStatus.Created</option>
-			<option>@ToDo_List.Models.TaskStatus.InProcess</option>
-			<option>@ToDo_List.Models.TaskStatus.Doned</option>
+			<option value="@ToDo_List.Models.TaskStatus.Created">Created</option>
+			<option value="@ToDo_List.Models.TaskStatus.InProcess">In process</option>
+			<option value="@ToDo_List.Models.TaskStatus.Doned">Doned</option>
 		  </select>
 		</div>
 		<div class="mb-3">
@@ -49,19 +49,30 @@
 		</div>
 		<div class="mb-3">
 			<label asp-for="ImageModel.ImageFile"></label>
-			<input asp-for="ImageModel.ImageFile" class="form-control" accept="image/jpeg,image/jpg"/>
+			<input asp-for="ImageModel.ImageFile" class="form-control" accept="image/jpeg,image/jpg,image/png" id="file1" onchange="save()"/>
+			<br />
+			<img id="image1" width="400" height="300" hidden>
 			<span asp-validation-for="ImageModel.ImageFile" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
 		  <label asp-for="RelatedTaskId"></label>
 		  <select class="form-control" id="exampleSelect1" asp-for="RelatedTaskId">
 			  <option value="">Not chosen</option>
-				@foreach(var task in Model.TasksIdsAndContentsFromDb)
+				@if (Model.TasksIdsAndContentsFromDb != null)
 				{
-					<option value="@task.Key">@task.Key - @task.Value</option>
-				}	
-		  </select>
+					@foreach (var task in Model.TasksIdsAndContentsFromDb)
+					{
+						<option value="@task.Key">@task.Key - @task.Value</option>
+					}
+				}
+			</select>
 		</div>
+		@if (Model.ImageModel != null)
+		{
+			<div class="mb-3">
+				<img width="400" height="300" src="@($"/Tasks/Task{Model.Id}/{Model.ImageModel.ImageTitle}")" alt="Task image capture">
+			</div>
+		}
 		<button type="submit" class="btn btn-primary" style="width: 150px">Update!</button>
 		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="width: 150px">Back to list</a>
 	</div>
@@ -70,5 +81,6 @@
 @section Scripts {
 	@{
 		<partial name="_ValidationScriptsPartial" />
+		<partial name="_Picture_loader" />
 	}
 }

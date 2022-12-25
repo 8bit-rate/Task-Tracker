@@ -19,6 +19,7 @@ namespace ToDo_List.Controllers
 			IEnumerable<ToDoList> tasksList = _db.ToDoLists.Include(o => o.ImageModel);
 			return View(tasksList);
 		}
+
 		//GET
 		public IActionResult Create()
 		{
@@ -74,12 +75,12 @@ namespace ToDo_List.Controllers
 			if (id == null || id == 0)
 				return NotFound();
 
-			var taskFromDb = _db.ToDoLists.Find(id);
+			var taskFromDb = _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefault(o => o.Id == id);
 
 			if (taskFromDb == null)
 				return NotFound();
 
-			taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Where(x => x.Id != id).ToDictionary(x => x.Id, x => x.Content);
+			taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Where(o => o.Id != id).ToDictionary(o => o.Id, o => o.Content);
 
 			return View(taskFromDb);
 		}
@@ -125,13 +126,14 @@ namespace ToDo_List.Controllers
 			}
 			return View(task);
 		}
+
 		//GET
 		public IActionResult Delete(int? id)
 		{
 			if (id == null || id == 0)
 				return NotFound();
 
-			var taskFromDb = _db.ToDoLists.Find(id);
+			var taskFromDb = _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefault(o => o.Id == id);
 
 			if (taskFromDb == null)
 				return NotFound();

@@ -1,0 +1,12 @@
+﻿<script type="text/javascript">
+	function save() {
+	const my_image = document.getElementById('image1')
+	my_image.hidden = false
+	let f = file1.files[0];
+	if (f) {
+		my_image.src = URL.createObjectURL(f);
+		localStorage.setItem('myImage', my_image.src);
+		}
+	}
+	my_image.src = localStorage.getItem('myImage')	
+</script>

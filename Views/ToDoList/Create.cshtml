@@ -1,8 +1,5 @@
 ﻿@model ToDoList
 
-@{
-	var ids = 
-}
 <form method="post" enctype="multipart/form-data" onload="">
 	<div class="border p-3 mt-4">
 		<div class="row pb-2">
@@ -44,7 +41,9 @@
 		</div>
 		<div class="mb-3">
 			<label asp-for="ImageModel.ImageFile"></label>
-			<input asp-for="ImageModel.ImageFile" class="form-control" accept="image/jpeg,image/jpg"/>
+			<input asp-for="ImageModel.ImageFile" class="form-control" accept="image/jpeg,image/jpg,image/png" id="file1" onchange="save()"/>
+			<br />
+			<img id="image1" width="400" height="300" hidden>
 			<span asp-validation-for="ImageModel.ImageFile" class="text-danger"></span>
 		</div>
 		<button type="submit" class="btn btn-primary" style="width: 150px">Create!</button>
@@ -57,5 +56,6 @@
 @section Scripts {
 	@{
 		<partial name="_ValidationScriptsPartial" />
+		<partial name="_Picture_loader" />
 	}
 }

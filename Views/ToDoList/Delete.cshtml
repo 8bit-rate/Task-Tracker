@@ -36,6 +36,16 @@
 			<label asp-for="Deadline"></label>
 			<input asp-for="Deadline" class="form-control" disabled/>
 		</div>
+		<div class="mb-3">
+		  <label asp-for="RelatedTaskId"></label>
+		  <input class="form-control" id="exampleSelect1" asp-for="RelatedTaskId" disabled/>
+		</div>
+		@if (Model.ImageModel != null)
+		{
+			<div class="mb-3">
+				<img width="400" height="300" src="@($"/Tasks/Task{Model.Id}/{Model.ImageModel.ImageTitle}")" alt="Task image capture">
+			</div>
+		}
 		<button type="submit" class="btn btn-danger" style="width: 150px">Remove</button>
 		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="width: 150px">Back to list</a>
 	</div>
