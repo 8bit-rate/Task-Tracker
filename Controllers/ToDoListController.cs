@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
 using ToDo_List.Data;
 using ToDo_List.Models;
 
@@ -20,24 +19,22 @@ namespace ToDo_List.Controllers
 			IEnumerable<ToDoList> tasksList = _db.ToDoLists.Include(o => o.ImageModel);
 			return View(tasksList);
 		}
-		// Create actions
 		//GET
 		public IActionResult Create()
 		{
 			return View();
 		}
-		//POST
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(ToDoList obj)
+		public IActionResult Create(ToDoList task)
 		{
-			if (obj.DateStart >= obj.Deadline)
-			{
+			if (task.DateStart >= task.Deadline)
 				ModelState.AddModelError("deadline", "Deadline can not be before or equal date start");
-			}
+
 			if (ModelState.IsValid)
 			{
-				var EntityModel = _db.ToDoLists.Add(obj);
+				var EntityModel = _db.ToDoLists.Add(task);
 				_db.SaveChanges();
 
 				int Id = EntityModel.Entity.Id;
@@ -46,115 +43,116 @@ namespace ToDo_List.Controllers
 				DirectoryInfo directoryInfo = new($"{wwwrootpath}/Tasks");
 
 				if (directoryInfo.Exists)
-				{
 					directoryInfo.Create();
-				}
 
 				directoryInfo.CreateSubdirectory(subDirPath);
 
-				if (obj.ImageModel != null)
+				if (task.ImageModel != null)
 				{
-					string fileName = Path.GetFileNameWithoutExtension(obj.ImageModel.ImageFile!.FileName);
-					string extension = Path.GetExtension(obj.ImageModel.ImageFile.FileName);
-					obj.ImageModel.ImageTitle = $"{fileName}{Id}{extension}";
-					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirPath}/{obj.ImageModel.ImageTitle}");
+					string fileName = Path.GetFileNameWithoutExtension(task.ImageModel.ImageFile!.FileName);
+					string extension = Path.GetExtension(task.ImageModel.ImageFile.FileName);
+					task.ImageModel.ImageTitle = $"{fileName}{Id}{extension}";
+					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirPath}/{task.ImageModel.ImageTitle}");
 
 					using (var fileStream = new FileStream(path, FileMode.Create))
-					{
-						obj.ImageModel.ImageFile.CopyTo(fileStream);
-					}
+						task.ImageModel.ImageFile.CopyTo(fileStream);
 
-					_db.ToDoLists.Update(obj);
+					_db.ToDoLists.Update(task);
 					_db.SaveChanges();
 				}
+
 				TempData["success"] = "Create successfuly";
+
 				return RedirectToAction("Index");
 			}
-			return View(obj);
+			return View(task);
 		}
 
-		// Edit acions
+		//GET
 		public IActionResult Edit(int? id)
 		{
 			if (id == null || id == 0)
-			{
 				return NotFound();
-			}
+
 			var taskFromDb = _db.ToDoLists.Find(id);
+
 			if (taskFromDb == null)
-			{
 				return NotFound();
-			}
+
+			//taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Select(o => o.Id).ToList();
+			taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Select(x => x).ToDictionary(x => x.Id, x => x.Content);
 
 			return View(taskFromDb);
 		}
-		//POST
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(ToDoList obj)
+		public IActionResult Edit(ToDoList task)
 		{
-			if (obj.DateStart >= obj.Deadline)
-			{
+			if (task.DateStart >= task.Deadline)
 				ModelState.AddModelError("deadline", "Deadline can not be before or equal date start");
-			}
+
 			if (ModelState.IsValid)
 			{
-				var EntityModel = _db.ToDoLists.Update(obj);
+				var EntityModel = _db.ToDoLists.Update(task);
+
 				_db.SaveChanges();
 
 				int Id = EntityModel.Entity.Id;
+
 				string wwwrootpath = _webHostEnvironment.WebRootPath;
+
 				string subDirPath = $"Task{Id}";
 
-				if (obj.ImageModel != null)
+				if (task.ImageModel != null)
 				{
-					string fileName = Path.GetFileNameWithoutExtension(obj.ImageModel.ImageFile!.FileName);
-					string extension = Path.GetExtension(obj.ImageModel.ImageFile.FileName);
-					obj.ImageModel.ImageTitle = $"{fileName}{Id}{extension}";
-					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirPath}/{obj.ImageModel.ImageTitle}");
+					string fileName = Path.GetFileNameWithoutExtension(task.ImageModel.ImageFile!.FileName);
+					string extension = Path.GetExtension(task.ImageModel.ImageFile.FileName);
+
+					task.ImageModel.ImageTitle = $"{fileName}{Id}{extension}";
+
+					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirPath}/{task.ImageModel.ImageTitle}");
 
 					using (var fileStream = new FileStream(path, FileMode.Create))
-					{
-						obj.ImageModel.ImageFile.CopyTo(fileStream);
-					}
+						task.ImageModel.ImageFile.CopyTo(fileStream);
 
-					_db.ToDoLists.Update(obj);
+					_db.ToDoLists.Update(task);
 					_db.SaveChanges();
 				}
 
 				TempData["success"] = "Update successfuly";
+
 				return RedirectToAction("Index");
 			}
-			return View(obj);
+			return View(task);
 		}
-
+		//GET
 		public IActionResult Delete(int? id)
 		{
 			if (id == null || id == 0)
-			{
 				return NotFound();
-			}
+
 			var taskFromDb = _db.ToDoLists.Find(id);
+
 			if (taskFromDb == null)
-			{
 				return NotFound();
-			}
+
 			return View(taskFromDb);
 		}
-		//POST
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult DeletePOST(int? id)
 		{
 			var taskFromDb = _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefault(o => o.Id == id);
+
 			if (taskFromDb == null)
-			{
 				return NotFound();
-			}
 
 			string wwwrootpath = _webHostEnvironment.WebRootPath;
 
 			DirectoryInfo df = new($"{wwwrootpath}/Tasks/Task{id}");
+
 			if (df.Exists)
 			{
 				df.Delete(true);
@@ -162,15 +160,11 @@ namespace ToDo_List.Controllers
 			}
 
 			_db.ToDoLists.Remove(taskFromDb);
-
 			_db.SaveChanges();
+
 			TempData["success"] = "Removed successfuly";
+
 			return RedirectToAction("Index");
-		}
-		public IEnumerable<int> GetAllTasks()
-		{
-			var tasks = from b in _db.ToDoLists select b.Id;
-			return tasks;
 		}
 	}
 }

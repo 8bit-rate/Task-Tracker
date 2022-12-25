@@ -52,6 +52,16 @@
 			<input asp-for="ImageModel.ImageFile" class="form-control" accept="image/jpeg,image/jpg"/>
 			<span asp-validation-for="ImageModel.ImageFile" class="text-danger"></span>
 		</div>
+		<div class="mb-3">
+		  <label asp-for="RelatedTaskId"></label>
+		  <select class="form-control" id="exampleSelect1" asp-for="RelatedTaskId">
+			  <option value="">Not chosen</option>
+				@foreach(var task in Model.TasksIdsAndContentsFromDb)
+				{
+					<option value="@task.Key">@task.Key - @task.Value</option>
+				}	
+		  </select>
+		</div>
 		<button type="submit" class="btn btn-primary" style="width: 150px">Update!</button>
 		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="width: 150px">Back to list</a>
 	</div>

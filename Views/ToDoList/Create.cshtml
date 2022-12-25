@@ -1,13 +1,9 @@
-﻿
-@model ToDoList
+﻿@model ToDoList
 
 @{
-	
+	var ids = 
 }
-
-
- 
-<form method="post" enctype="multipart/form-data" onload="GetAllTasks()">
+<form method="post" enctype="multipart/form-data" onload="">
 	<div class="border p-3 mt-4">
 		<div class="row pb-2">
 			<h2 class="text-primary">Create a new task</h2>
@@ -55,6 +51,8 @@
 		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="width: 150px">Back to list</a>
 	</div>
 </form>
+
+
 
 @section Scripts {
 	@{

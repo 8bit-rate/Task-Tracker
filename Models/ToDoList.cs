@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDo_List.Models
 {
@@ -25,6 +26,10 @@ namespace ToDo_List.Models
         [DisplayName("Deadline")]
         public DateTime Deadline { get; set; }
         [DisplayName("Related task id")]
-        public int? relatedTaskId { get; set; } = null;
+		[NotMapped]
+		public Dictionary<int, string>? TasksIdsAndContentsFromDb { get; set; }
+        [DisplayName("Related task")]
+		public int? RelatedTaskId { get; set; }
+
     }
 }

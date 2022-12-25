@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<ToDoList>
 @{
 	ViewData["Title"] = "Index";
+
 	var createdTasks = Model.Where(x => x.Status == ToDo_List.Models.TaskStatus.Created);
 	var inProcessTasks = Model.Where(x => x.Status == ToDo_List.Models.TaskStatus.InProcess);
 	var donedTasks = Model.Where(x => x.Status == ToDo_List.Models.TaskStatus.Doned);
