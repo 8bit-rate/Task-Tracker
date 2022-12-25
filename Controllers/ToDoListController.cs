@@ -80,7 +80,7 @@ namespace ToDo_List.Controllers
 				return NotFound();
 
 			//taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Select(o => o.Id).ToList();
-			taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Select(x => x).ToDictionary(x => x.Id, x => x.Content);
+			taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Select(x => x).Where(x => x.Id != id).ToDictionary(x => x.Id, x => x.Content);
 
 			return View(taskFromDb);
 		}
