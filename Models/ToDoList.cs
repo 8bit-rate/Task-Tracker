@@ -25,7 +25,7 @@ namespace ToDo_List.Models
         [Required]
         [DisplayName("Deadline")]
         public DateTime Deadline { get; set; }
-        [DisplayName("Related task id")]
+
 		[NotMapped]
 		public Dictionary<int, string>? TasksIdsAndContentsFromDb { get; set; }
         [DisplayName("Related task")]
