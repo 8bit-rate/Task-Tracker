@@ -51,8 +51,14 @@
 			<label asp-for="ImageModel.ImageFile"></label>
 			<input asp-for="ImageModel.ImageFile" class="form-control" accept="image/jpeg,image/jpg,image/png" id="file1" onchange="save()"/>
 			<br />
-			<img id="image1" width="400" height="300" hidden>
-			<span asp-validation-for="ImageModel.ImageFile" class="text-danger"></span>
+			@if (Model.ImageModel != null)
+			{
+				<img id="image1" width="400" height="300" src="@($"/Tasks/Task{Model.Id}/{Model.ImageModel.ImageTitle}")" alt="Task image capture">
+			}
+			else
+			{
+				<img id="image1" width="400" height="300" alt="Task image capture" hidden>
+			}
 		</div>
 		<div class="mb-3">
 		  <label asp-for="RelatedTaskId"></label>
@@ -67,12 +73,12 @@
 				}
 			</select>
 		</div>
-		@if (Model.ImageModel != null)
+		@*@if (Model.ImageModel != null)
 		{
 			<div class="mb-3">
 				<img width="400" height="300" src="@($"/Tasks/Task{Model.Id}/{Model.ImageModel.ImageTitle}")" alt="Task image capture">
 			</div>
-		}
+		}*@
 		<button type="submit" class="btn btn-primary" style="width: 150px">Update!</button>
 		<a asp-controller="ToDoList" asp-action="Index" class="btn btn-secondary" style="width: 150px">Back to list</a>
 	</div>
