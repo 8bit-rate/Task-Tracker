@@ -40,21 +40,21 @@ namespace ToDo_List.Controllers
 
 				int Id = EntityModel.Entity.Id;
 				string wwwrootpath = _webHostEnvironment.WebRootPath;
-				string subDirPath = $"Task{Id}";
+				string subDirName = $"Task{Id}";
 
 				DirectoryInfo directoryInfo = new($"{wwwrootpath}/Tasks");
 
 				if (directoryInfo.Exists)
 					directoryInfo.Create();
 
-				directoryInfo.CreateSubdirectory(subDirPath);
+				directoryInfo.CreateSubdirectory(subDirName);
 
 				if (task.ImageModel != null)
 				{
 					string fileName = Path.GetFileNameWithoutExtension(task.ImageModel.ImageFile!.FileName);
 					string extension = Path.GetExtension(task.ImageModel.ImageFile.FileName);
 					task.ImageModel.ImageTitle = $"{fileName}{Id}{extension}";
-					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirPath}/{task.ImageModel.ImageTitle}");
+					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirName}/{task.ImageModel.ImageTitle}");
 
 					using (var fileStream = new FileStream(path, FileMode.Create))
 						task.ImageModel.ImageFile.CopyTo(fileStream);
@@ -152,19 +152,19 @@ namespace ToDo_List.Controllers
 			string wwwrootpath = _webHostEnvironment.WebRootPath;
 
 			DirectoryInfo df = new($"{wwwrootpath}/Tasks/Task{id}");
-
-			if (df.Exists)																				// Удаление каталога задачи из wwwroot
+			// Удаление каталога задачи из wwwroot
+			if (df.Exists)																				
 				df.Delete(true);
-
-			if (taskFromDb.ImageModel != null)															// Удаление записи из БД, связанной с картинкой задачи, если она существует
+			// Удаление записи из БД, связанной с картинкой задачи, если она существует
+			if (taskFromDb.ImageModel != null)															
 				_db.Images.Remove(taskFromDb.ImageModel!);
 
 			_db.ToDoLists.Remove(taskFromDb);
-
-			var relatedTask = _db.ToDoLists.FirstOrDefault(o => o.RelatedTaskId == id);					// Поиск задачи, которая связана с текущей(удаляемой) по полю RelatedTaskId
-
+			// Поиск задачи, которая связана с текущей(удаляемой) по полю RelatedTaskId
+			var relatedTask = _db.ToDoLists.FirstOrDefault(o => o.RelatedTaskId == id);
+			// Если задача, связанная с текущей(удаляемой) задачей, найдена, ставим у связанной задачи соответствующее поле в null
 			if (relatedTask != null)
-				relatedTask.RelatedTaskId = null;														// Если задачаЮ связанная с текущей(удаляемой) задачей, найдена, ставим у связанной задачи соответствующее поле в null
+				relatedTask.RelatedTaskId = null;														
 
 			_db.SaveChanges();
 
