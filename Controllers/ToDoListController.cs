@@ -155,10 +155,10 @@ namespace ToDo_List.Controllers
 			DirectoryInfo df = new($"{wwwrootpath}/Tasks/Task{id}");
 
 			if (df.Exists)
-			{
 				df.Delete(true);
+
+			if (taskFromDb.ImageModel != null)
 				_db.Images.Remove(taskFromDb.ImageModel!);
-			}
 
 			_db.ToDoLists.Remove(taskFromDb);
 			_db.SaveChanges();
