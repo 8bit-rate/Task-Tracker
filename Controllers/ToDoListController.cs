@@ -41,6 +41,7 @@ namespace ToDo_List.Controllers
 				int Id = EntityModel.Entity.Id;
 				string wwwrootpath = _webHostEnvironment.WebRootPath;
 				string subDirPath = $"Task{Id}";
+
 				DirectoryInfo directoryInfo = new($"{wwwrootpath}/Tasks");
 
 				if (directoryInfo.Exists)
@@ -102,8 +103,6 @@ namespace ToDo_List.Controllers
 
 				string wwwrootpath = _webHostEnvironment.WebRootPath;
 
-				string subDirPath = $"Task{Id}";
-
 				if (task.ImageModel != null)
 				{
 					string fileName = Path.GetFileNameWithoutExtension(task.ImageModel.ImageFile!.FileName);
@@ -111,7 +110,7 @@ namespace ToDo_List.Controllers
 
 					task.ImageModel.ImageTitle = $"{fileName}{Id}{extension}";
 
-					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirPath}/{task.ImageModel.ImageTitle}");
+					string path = Path.Combine($"{wwwrootpath}/Tasks/Task{Id}/{task.ImageModel.ImageTitle}");
 
 					using (var fileStream = new FileStream(path, FileMode.Create))
 						task.ImageModel.ImageFile.CopyTo(fileStream);
@@ -154,13 +153,19 @@ namespace ToDo_List.Controllers
 
 			DirectoryInfo df = new($"{wwwrootpath}/Tasks/Task{id}");
 
-			if (df.Exists)
+			if (df.Exists)																				// Удаление каталога задачи из wwwroot
 				df.Delete(true);
 
-			if (taskFromDb.ImageModel != null)
+			if (taskFromDb.ImageModel != null)															// Удаление записи из БД, связанной с картинкой задачи, если она существует
 				_db.Images.Remove(taskFromDb.ImageModel!);
 
 			_db.ToDoLists.Remove(taskFromDb);
+
+			var relatedTask = _db.ToDoLists.FirstOrDefault(o => o.RelatedTaskId == id);					// Поиск задачи, которая связана с текущей(удаляемой) по полю RelatedTaskId
+
+			if (relatedTask != null)
+				relatedTask.RelatedTaskId = null;														// Если задачаЮ связанная с текущей(удаляемой) задачей, найдена, ставим у связанной задачи соответствующее поле в null
+
 			_db.SaveChanges();
 
 			TempData["success"] = "Removed successfuly";
