@@ -160,12 +160,14 @@ namespace ToDo_List.Controllers
 				_db.Images.Remove(taskFromDb.ImageModel!);
 
 			_db.ToDoLists.Remove(taskFromDb);
-			// Поиск задачи, которая связана с текущей(удаляемой) по полю RelatedTaskId
-			var relatedTask = _db.ToDoLists.FirstOrDefault(o => o.RelatedTaskId == id);
-			// Если задача, связанная с текущей(удаляемой) задачей, найдена, ставим у связанной задачи соответствующее поле в null
-			if (relatedTask != null)
-				relatedTask.RelatedTaskId = null;														
-
+			// Поиск задач, которые связаны с текущей(удаляемой) по полю RelatedTaskId
+			var relatedTasks = _db.ToDoLists.Where(o => o.RelatedTaskId == id).ToArray();
+			// Если задачи, связанная с текущей(удаляемой) задачей, найдены, ставим у связанных задач соответствующее поле в null
+			if (relatedTasks != null && relatedTasks.Length > 0)
+			{
+				foreach (var task in relatedTasks)
+					task.RelatedTaskId = null;
+			}
 			_db.SaveChanges();
 
 			TempData["success"] = "Removed successfuly";
