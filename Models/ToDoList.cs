@@ -19,6 +19,7 @@ namespace ToDo_List.Models
 		
 		public Importance Importance { get; set; } = Importance.Low;
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
+
         [Required]
         [DisplayName("Date start")]
         public DateTime DateStart { get; set; }
@@ -28,6 +29,7 @@ namespace ToDo_List.Models
 
 		[NotMapped]
 		public Dictionary<int, string>? TasksIdsAndContentsFromDb { get; set; }
+
         [DisplayName("Related task")]
 		public int? RelatedTaskId { get; set; }
 

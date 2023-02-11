@@ -168,6 +168,7 @@ namespace ToDo_List.Controllers
 				foreach (var task in relatedTasks)
 					task.RelatedTaskId = null;
 			}
+
 			_db.SaveChanges();
 
 			TempData["success"] = "Removed successfuly";
