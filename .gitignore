@@ -1,4 +1,11 @@
+# Builds results
+[Dd]ebug
+[Rr]elease
+[Oo]bj/
+x64/
+x86/
+
+# Other
 /.vs
-/obj
-/wwwroot/Tasks
+/wwwroot
 /pcts

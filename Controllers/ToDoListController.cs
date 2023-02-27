@@ -9,14 +9,13 @@ namespace ToDo_List.Controllers
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IWebHostEnvironment _webHostEnvironment;
-		public ToDoListController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+		private readonly string wwwrootpath = string.Empty;
+		public ToDoListController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment) =>
+			(_db, _webHostEnvironment, wwwrootpath) = (db, webHostEnvironment, webHostEnvironment.WebRootPath);
+		
+		public async Task<IActionResult> Index()
 		{
-			_db = db;
-			_webHostEnvironment = webHostEnvironment;
-		}
-		public IActionResult Index()
-		{
-			IEnumerable<ToDoList> tasksList = _db.ToDoLists.Include(o => o.ImageModel);
+			IEnumerable<ToDoList> tasksList = await _db.ToDoLists.Include(o => o.ImageModel).ToArrayAsync();
 			return View(tasksList);
 		}
 
@@ -28,7 +27,7 @@ namespace ToDo_List.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(ToDoList task)
+		public async Task<IActionResult> Create(ToDoList task)
 		{
 			if (task.DateStart >= task.Deadline)
 				ModelState.AddModelError("deadline", "Deadline can not be before or equal date start");
@@ -36,10 +35,9 @@ namespace ToDo_List.Controllers
 			if (ModelState.IsValid)
 			{
 				var EntityModel = _db.ToDoLists.Add(task);
-				_db.SaveChanges();
+				await _db.SaveChangesAsync();
 
 				int Id = EntityModel.Entity.Id;
-				string wwwrootpath = _webHostEnvironment.WebRootPath;
 				string subDirName = $"Task{Id}";
 
 				DirectoryInfo directoryInfo = new($"{wwwrootpath}/Tasks");
@@ -56,12 +54,12 @@ namespace ToDo_List.Controllers
 					task.ImageModel.ImageTitle = $"{fileName}{Id}{extension}";
 					string path = Path.Combine($"{wwwrootpath}/Tasks/{subDirName}/{task.ImageModel.ImageTitle}");
 
-					using (var fileStream = new FileStream(path, FileMode.Create))
+					using var fileStream = new FileStream(path, FileMode.Create);
 						task.ImageModel.ImageFile.CopyTo(fileStream);
 
 					_db.ToDoLists.Update(task);
-					_db.SaveChanges();
-				}
+					await _db.SaveChangesAsync();
+				}				
 
 				TempData["success"] = "Create successfuly";
 
@@ -71,24 +69,24 @@ namespace ToDo_List.Controllers
 		}
 
 		//GET
-		public IActionResult Edit(int? id)
+		public async Task<IActionResult> Edit(int? id)
 		{
 			if (id == null || id == 0)
 				return NotFound();
 
-			var taskFromDb = _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefault(o => o.Id == id);
+			var taskFromDb = await _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefaultAsync(o => o.Id == id);
 
 			if (taskFromDb == null)
 				return NotFound();
 
-			taskFromDb.TasksIdsAndContentsFromDb = _db.ToDoLists.AsNoTracking().Where(o => o.Id != id).ToDictionary(o => o.Id, o => o.Content);
+			taskFromDb.TasksIdsAndContentsFromDb = await _db.ToDoLists.AsNoTracking().Where(o => o.Id != id).ToDictionaryAsync(o => o.Id, o => o.Content);
 
 			return View(taskFromDb);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(ToDoList task)
+		public async Task<IActionResult> Edit(ToDoList task)
 		{
 			if (task.DateStart >= task.Deadline)
 				ModelState.AddModelError("deadline", "Deadline can not be before or equal date start");
@@ -96,15 +94,12 @@ namespace ToDo_List.Controllers
 			if (ModelState.IsValid)
 			{
 				var EntityModel = _db.ToDoLists.Update(task);
-
-				_db.SaveChanges();
-
-				int Id = EntityModel.Entity.Id;
-
-				string wwwrootpath = _webHostEnvironment.WebRootPath;
+				await _db.SaveChangesAsync();
 
 				if (task.ImageModel != null)
 				{
+					int Id = EntityModel.Entity.Id;
+
 					string fileName = Path.GetFileNameWithoutExtension(task.ImageModel.ImageFile!.FileName);
 					string extension = Path.GetExtension(task.ImageModel.ImageFile.FileName);
 
@@ -116,9 +111,8 @@ namespace ToDo_List.Controllers
 						task.ImageModel.ImageFile.CopyTo(fileStream);
 
 					_db.ToDoLists.Update(task);
-					_db.SaveChanges();
+					await _db.SaveChangesAsync();
 				}
-
 				TempData["success"] = "Update successfuly";
 
 				return RedirectToAction("Index");
@@ -127,12 +121,12 @@ namespace ToDo_List.Controllers
 		}
 
 		//GET
-		public IActionResult Delete(int? id)
+		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null || id == 0)
 				return NotFound();
 
-			var taskFromDb = _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefault(o => o.Id == id);
+			var taskFromDb = await _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefaultAsync(o => o.Id == id);
 
 			if (taskFromDb == null)
 				return NotFound();
@@ -142,14 +136,12 @@ namespace ToDo_List.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult DeletePOST(int? id)
+		public async Task<IActionResult> DeletePOST(int? id)
 		{
-			var taskFromDb = _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefault(o => o.Id == id);
+			var taskFromDb = await _db.ToDoLists.Include(o => o.ImageModel).FirstOrDefaultAsync(o => o.Id == id);
 
 			if (taskFromDb == null)
 				return NotFound();
-
-			string wwwrootpath = _webHostEnvironment.WebRootPath;
 
 			DirectoryInfo df = new($"{wwwrootpath}/Tasks/Task{id}");
 			// Удаление каталога задачи из wwwroot
@@ -161,7 +153,7 @@ namespace ToDo_List.Controllers
 
 			_db.ToDoLists.Remove(taskFromDb);
 			// Поиск задач, которые связаны с текущей(удаляемой) по полю RelatedTaskId
-			var relatedTasks = _db.ToDoLists.Where(o => o.RelatedTaskId == id).ToArray();
+			var relatedTasks = await _db.ToDoLists.Where(o => o.RelatedTaskId == id).ToArrayAsync();
 			// Если задачи, связанная с текущей(удаляемой) задачей, найдены, ставим у связанных задач соответствующее поле в null
 			if (relatedTasks != null && relatedTasks.Length > 0)
 			{
@@ -169,7 +161,7 @@ namespace ToDo_List.Controllers
 					task.RelatedTaskId = null;
 			}
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			TempData["success"] = "Removed successfuly";
 
